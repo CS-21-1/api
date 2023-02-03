@@ -12,6 +12,10 @@ module.exports = function (sequelize, DataTypes) {
             type: DataTypes.TEXT,
             allowNull: true
         },
+        ip: {
+            type: DataTypes.STRING(40),
+            allowNull: false
+        },
     }, {
         indexes: [
             {

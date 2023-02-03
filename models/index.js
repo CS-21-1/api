@@ -16,7 +16,8 @@ const models = [
   'websites',
   'tags',
   'websites_tags',
-  'scores'
+  'scores',
+  'fakes'
 ];
 models.forEach(function(model) {
   module.exports[model] = require(path.join(__dirname, model))(sequelize, Sequelize.DataTypes)
