@@ -9,7 +9,7 @@ module.exports = function (sequelize, DataTypes) {
             allowNull: false
         },
         comment: {
-            type: DataTypes.TEXT,
+            type: DataTypes.TEXT(255),
             allowNull: true
         },
         ip: {
