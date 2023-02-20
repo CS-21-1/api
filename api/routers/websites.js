@@ -6,7 +6,7 @@ const router = express.Router()
 
 router.get('/websites/:id', async (req, res) => {
     db = await models.websites.findOne({
-        where: { id: Number(req.params.id) },
+        where: { id: req.params.id },
         limit: 1
     });
     if (db !== null) {
@@ -17,11 +17,17 @@ router.get('/websites/:id', async (req, res) => {
     }
 });
 router.get('/websites', async (req, res) => {
+    let options = {};
+    const domain = req.query.domain ?? null;
+
+    if(domain !== null){
+        options.domain = domain;
+    }
+    options.offset = req.query.offset ?? 0;
+    options.limit = req.query.limit ?? 20;
+
     if (req.query.domain === null || req.query.domain === undefined) {
-        return res.status(200).json(await models.websites.findAll({
-            offset: Number(req.query.offset ?? 0),
-            limit: Number(req.query.limit ?? 20)
-        }));
+        return res.status(200).json(await models.websites.findAll(options));
     } else {
         db = await models.websites.findOne({
             where: {

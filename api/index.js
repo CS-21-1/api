@@ -1,3 +1,4 @@
+require('dotenv').config()
 const models = require('../models');
 //
 const express = require('express');
@@ -9,7 +10,6 @@ const app = express();
 const bp = require('body-parser')
 //
 const tags = require("./tags");
-const port = 3000;
 //
 const websitesRouter = require("./routers/websites");
 const scoresRouter = require("./routers/scores");
@@ -52,6 +52,6 @@ app.use(fakesRouter)
 app.get('/tags', async (req, res) => {
     return res.status(200).json(await api.Tags.tags);
 })
-app.listen(port, () => {
-    console.log(`Express listening on port ${port}`)
+app.listen(process.env.PORT, process.env.IP, () => {
+    console.log(`Express listening on ${process.env.IP}:${process.env.PORT}`)
 })
