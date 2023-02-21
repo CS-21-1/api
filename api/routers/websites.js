@@ -2,7 +2,8 @@ const express = require('express');
 const axios = require('axios');
 const models = require("../../models");
 const { Op } = require("sequelize");
-const router = express.Router()
+const router = express.Router();
+const whoiser = require("whoiser");
 
 router.get('/websites/:id', async (req, res) => {
     db = await models.websites.findOne({
@@ -10,8 +11,8 @@ router.get('/websites/:id', async (req, res) => {
         limit: 1
     });
     if (db !== null) {
-        const whois = await axios.get(`http://api.whois.vu/?q=${db.domain}`)
-        return res.status(200).json(Object.assign({ database: db }, { whois: whois.data }))
+        const whois = await whoiser(db.domain)
+        return res.status(200).json(Object.assign({ database: db }, { whois }))
     } else {
         return res.status(200).json(Object.assign({ database: null }, { whois: null }));
     }
@@ -20,7 +21,7 @@ router.get('/websites', async (req, res) => {
     let options = {};
     const domain = req.query.domain ?? null;
 
-    if(domain !== null){
+    if (domain !== null) {
         options.domain = domain;
     }
     options.offset = req.query.offset ?? 0;
@@ -35,8 +36,11 @@ router.get('/websites', async (req, res) => {
             },
             limit: 1
         });
-        const whois = await axios.get(`http://api.whois.vu/?q=${req.query.domain}`)
-        return res.status(200).json(Object.assign({ database: db }, { whois: whois.data }))
+        const whois = await whoiser(req.query.domain).catch(err => {
+            console.log(err)
+            return err;
+        });
+        return res.status(200).json(Object.assign({ database: db }, { whois }))
     }
 });
 router.post('/websites', (req, res) => {
