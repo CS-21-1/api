@@ -24,9 +24,8 @@ router.get('/websites', async (req, res) => {
     if (domain !== null) {
         options.domain = domain;
     }
-    options.offset = req.query.offset ?? 0;
-    options.limit = req.query.limit ?? 20;
-
+    options.offset = Number(req.query.offset ?? 0);
+    options.limit = Number(req.query.limit ?? 20);
     if (req.query.domain === null || req.query.domain === undefined) {
         return res.status(200).json(await models.websites.findAll(options));
     } else {

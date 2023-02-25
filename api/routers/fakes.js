@@ -10,15 +10,19 @@ router.get('/fakes/:fact', async (req, res) => {
                 [Op.like]: '%' + req.params.fact + '%'
             }
         },
-        offset: req.query.offset ?? 0,
-        limit: req.query.limit ?? 20
+        offset: Number(req.query.offset ?? 0),
+        limit: Number(req.query.limit ?? 20)
     }));
 });
 router.get('/fakes', async (req, res) => {
-    return res.status(200).json(await models.fakes.findAll({
-        offset: req.query.offset ?? 0,
-        limit: req.query.limit ?? 20
-    }));
+    let options = {
+        offset: Number(req.query.offset ?? 0),
+        limit: Number(req.query.limit ?? 20)
+    }
+    if(req.query.order === "DESC" || req.query.order === "ASC"){
+        options.order = [ [ "id", req.query.order ] ];   
+    }
+    return res.status(200).json(await models.fakes.findAll(options));
 });
 
 module.exports = router;
