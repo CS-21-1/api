@@ -9,7 +9,8 @@ const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_
     collate: 'utf8_general_ci',
     timestamps: false
   },
-  logging: console.log
+  // logging: console.log
+  logging: false
 });
 
 // const sequelize = new Sequelize(process.env.DATABASE_NAME, process.env.DATABASE_USERNAME, process.env.DATABASE_PASSWORD ?? "", {

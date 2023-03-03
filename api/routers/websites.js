@@ -4,6 +4,7 @@ const models = require("../../models");
 const { Op } = require("sequelize");
 const router = express.Router();
 const whoiser = require("whoiser");
+const { checkParam } = require("../checks");
 
 router.get('/websites/:id', async (req, res) => {
     db = await models.websites.findOne({
@@ -11,7 +12,10 @@ router.get('/websites/:id', async (req, res) => {
         limit: 1
     });
     if (db !== null) {
-        const whois = await whoiser(db.domain)
+        const whois = await whoiser(db.domain).catch(err => {
+            console.log(err);
+            return null;
+        });
         return res.status(200).json(Object.assign({ database: db }, { whois }))
     } else {
         return res.status(200).json(Object.assign({ database: null }, { whois: null }));
@@ -42,7 +46,8 @@ router.get('/websites', async (req, res) => {
         return res.status(200).json(Object.assign({ database: db }, { whois }))
     }
 });
-router.post('/websites', (req, res) => {
+router.post('/websites', checkParam, (req, res) => {
+    console.log(req.body)
     return models.websites.create({
         domain: req.body.domain
     }).then(function (task) {
